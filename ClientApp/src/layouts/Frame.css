@@ -1,0 +1,16 @@
+.half-transparent {
+    background: rgba(255, 130, 71, 0.3);
+}
+
+.menu {
+    background: rgba(0, 0, 0, 0);
+    font-size: 20px; 
+}
+
+.icon {
+    margin-right: 10px;
+}
+
+a {
+    font-size: 16px; 
+}

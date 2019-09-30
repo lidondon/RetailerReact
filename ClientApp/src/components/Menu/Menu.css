@@ -1,0 +1,18 @@
+.box {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.background-image {
+    background: url('../../static_files/menu.jpg');
+    background-size: cover;
+    height: 80vh;
+}
+
+.row-confirm {
+    margin-top: 10px
+}
+
+.btn-confirm {
+    width: 90%
+}
