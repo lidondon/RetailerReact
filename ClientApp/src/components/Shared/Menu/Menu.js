@@ -3,8 +3,8 @@ import { Row, Col, Table } from 'antd';
 
 import './Menu.css';
 
-import Dropdown from '../Shared/Dropdown';
-import Loading from '../Shared/Loading';
+import Dropdown from '../../Shared/Dropdown';
+import Loading from '../../Shared/Loading';
 
 
 const PURCHASE_TEXT = "訂購";
@@ -53,12 +53,11 @@ class Menu extends Component {
         const { getMenuCategories } = this.props.menuActions;
 
         //categories
-        if (this.props.id !== nextProps.id) {
+        if (this.props.id !== nextProps.id && nextProps.id) {
             this.clearAll();
             getMenuCategories(nextProps.id);
         }
 
-        /* because this dropdown doesn't have default selected item */
         if (this.state.hasLoadCategories.size == 0 && categories.length > 0) {
             this.props.menuActions.getMenuItems(this.props.id, categories[0].id);
             this.setState({ 

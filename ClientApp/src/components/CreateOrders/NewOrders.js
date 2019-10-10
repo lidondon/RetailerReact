@@ -3,10 +3,9 @@ import { Row, Col, Collapse, Icon, Modal } from 'antd';
 
 import './NewOrders.css';
 import Loading from '../Shared/Loading';
-import FewCellarers from './FewCellarers';
-import Menu from '../Menu/Menu';
-import Order from '../Order/OrderEditable';
-import { isEmptyObject } from '../../utilities/util';
+import FewCellarers from '../Shared/Cellarer/FewCellarers';
+import Menu from '../Shared/Menu/Menu';
+import OrderEditable from '../Orders/OrderEditable';
 
 const panelStyle = {
     background: '#f78822',
@@ -90,8 +89,8 @@ class NewOrders extends Component {
 
             if (cellarer) result.push(
                 <Panel header={cellarer.name} key={cellarer.id} style={panelStyle} >
-                    <Order cellarerId={cellarer.id} items={orders[k]} selectedRowKeys={selectedRowKeys[k]}
-                        isShowPagination={false} onSaveItem={this.onSaveItem}
+                    <OrderEditable cellarerId={cellarer.id} items={orders[k]} selectedRowKeys={selectedRowKeys[k]}
+                        isShowPagination={false} onSaveItem={this.onSaveItem} rowKey="liquorId"
                         onSelectedChange={this.onSelectedOrderItemsChange}
                         onBatchDelete={this.onBatchDelete}
                         onSave={this.onSave}/>
@@ -110,7 +109,7 @@ class NewOrders extends Component {
         return (
             <div>
                 {isLoading && <Loading />}
-                <Cellarers cellarers={cellarers} onChange={this.onCellarerSelected}/>
+                <Cellarers className="cellarers" cellarers={cellarers} onChange={this.onCellarerSelected}/>
                 <Row>
                     <Col span={9} className="col-orders">
                         <Collapse

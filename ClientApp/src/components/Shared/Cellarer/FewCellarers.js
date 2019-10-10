@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Radio } from 'antd';
 
-import './FewCellarers.css';
-
-const SELECT_CELLARER = "請選擇店家";
 const { Group, Button } = Radio;
 
 class FewCellarers extends Component {
@@ -16,7 +13,7 @@ class FewCellarers extends Component {
         const { items, onChange } = this.props;
 
         return (
-            <Group className="selector" onChange={onChange}>
+            <Group onChange={onChange}>
                 {this.getItems(items)}
             </Group>
         );

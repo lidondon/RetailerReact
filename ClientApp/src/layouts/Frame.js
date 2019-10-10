@@ -19,24 +19,26 @@ class Frame extends Component {
         this.setState({ current: e.key });
     };
 
-    render () {
-        // return (
-        //     <nav className="navbar navbar-expand-sm navbar-toggleable-sm half-transparent ">
-        //         <div className="container">
-        //             <Link className="navbar-brand" to="/">
-        //                 <img src={Logo} style={{width: 120, height: 50}} alt="liquorder" />
-        //             </Link>
-        //             <div className="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-        //                 <ul className="navbar-nav flex-grow-1">
-        //                     <li className="nav-item">
-        //                         <Link className="nav-link text-dark" to="/orders/new">建立訂單</Link>
-        //                     </li>
-        //                 </ul>
-        //             </div>
-        //         </div>
-        //     </nav>
-        // );
+    getOrderSuBmenu = () => {
+        return (
+            <SubMenu
+                title={
+                    <span className="submenu-title-wrapper">
+                        <i className="fab fa-wpforms icon" />
+                        訂單
+                    </span>
+                }>
+                <Item key="creatOrder">
+                    <a href="/#/orders/new">建立訂單</a>
+                </Item>
+                <Item key="mail">
+                    <a href="/#/orders">查詢訂單</a>
+                </Item>
+            </SubMenu>
+        );
+    }
 
+    render () {
         return (
             <div className="half-transparent">
                 <div className="container">
@@ -48,20 +50,10 @@ class Frame extends Component {
                         </Col>
                         <Col span={21}>
                             <Menu className="menu" theme="dark" onClick={this.onClick} selectedKeys={[this.state.current]} mode="horizontal">
-                                <SubMenu
-                                    title={
-                                        <span className="submenu-title-wrapper">
-                                            <i class="fab fa-wpforms icon" />
-                                            訂單
-                                        </span>
-                                    }>
-                                    <Item key="creatOrder">
-                                        <a href="/#/orders/new">建立訂單</a>
-                                    </Item>
-                                    <Item key="mail">
-                                        <a href="/#/orders">查詢訂單</a>
-                                    </Item>
-                                </SubMenu>
+                                {this.getOrderSuBmenu()}
+                                <Item key="mail">
+                                    <a href="/#/favorites">偏好品項</a>
+                                </Item>
                             </Menu>
                         </Col>
                     </Row>

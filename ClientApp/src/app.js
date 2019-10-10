@@ -14,6 +14,7 @@ import Home from './views/Home';
 import Login from './views/Login';
 import CreateOrders from './views/CreateOrders';
 import Orders from './views/Orders';
+import Favorites from './views/Favorites';
 
 const store = createStore(reducers, applyMiddleware(AxiosMiddleware));
 
@@ -21,12 +22,14 @@ class App extends React.Component {
     render () {
         return (
             <HashRouter>
-                <div className="background text">
+                {/* <div className="background text"> */}
+                <div>
                     <Frame />
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/orders/new" component={CreateOrders}/>
                     <Route exact path="/orders" component={Orders}/>
+                    <Route exact path="/favorites" component={Favorites}/>
                 </div>
             </HashRouter>
         );

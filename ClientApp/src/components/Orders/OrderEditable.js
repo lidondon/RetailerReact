@@ -58,25 +58,37 @@ class OrderEditable extends Component {
     // }
 
     onSelectedChange = selectedRowKeys => {
-        this.props.onSelectedChange(this.props.cellarerId, selectedRowKeys);
+        const { cellarerId, onSelectedChange } = this.props;
+
+        if (cellarerId) {
+            onSelectedChange(cellarerId, selectedRowKeys);
+        } else {
+            onSelectedChange(selectedRowKeys);
+        }
     }
 
     onSaveItem = (row, error) => {
         const { cellarerId, onSaveItem } = this.props;
 
-        onSaveItem(cellarerId, row, error);
+        if (cellarerId) {
+            onSaveItem(cellarerId, row, error);
+        } else {
+            onSaveItem(row, error);
+        }
     }
 
     onRemove = e => {
         const { cellarerId, onBatchDelete, selectedRowKeys } = this.props;
 
-        onBatchDelete(cellarerId, selectedRowKeys);
+        if (cellarerId) {
+            onBatchDelete(cellarerId, selectedRowKeys);
+        } else {
+            onBatchDelete(selectedRowKeys);
+        }
     }
 
-    onSave = e => {
-        const { cellarerId, onSave } = this.props;
-
-        onSave(cellarerId);
+    getRowKey = () => {
+        return this.props.rowKey ? this.props.rowKey : "key";
     }
 
     render() {
@@ -86,7 +98,7 @@ class OrderEditable extends Component {
             <div className="box">
                 <Row>
                     <EditableTable checkable={true} isShowPagination={isShowPagination}
-                        columns={COLUMNS} data={items} rowKey="liquorId"
+                        columns={COLUMNS} data={items} rowKey={this.getRowKey()}
                         onSelectedChange={this.onSelectedChange}
                         onSave={this.onSaveItem}
                         selectedRowKeys={selectedRowKeys} />
@@ -100,7 +112,7 @@ class OrderEditable extends Component {
                         </Col>
                     }
                     <Col span={4} offset={(selectedRowKeys && selectedRowKeys.length > 0) ? 0 : 20} >
-                        <button type="button" className="btn btn-success btn-confirm" onClick={this.onSave} >{SAVE_TEXT}</button>
+                        <button type="button" className="btn btn-success btn-confirm" onClick={onSave} >{SAVE_TEXT}</button>
                     </Col>
                     {/* <Col span={4}>
                         <button type="button" className="btn btn-primary btn-confirm" >{SEND_TEXT}</button>

@@ -37,5 +37,5 @@ export const replaceNewObject = (objs, obj, keyProp) => {
 
     objs.splice(index, 1, newRow);
 
-    return objs;
+    return newRow;
 }

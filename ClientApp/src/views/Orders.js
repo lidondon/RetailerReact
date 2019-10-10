@@ -4,35 +4,36 @@ import { connect } from 'react-redux';
 
 //import './CreateOrders.css';
 
-// import { actions } from './CreateOrdersRedux';
-// import NewOrders from '../components/CreateOrders/NewOrders';
+import { actions } from './OrdersRedux';
+import SearchOrders from '../components/Orders/SearchOrders';
 
 class Orders extends Component {
 
     render() {
-        const { newOrders, newOrdersActions, menu, menuActions } = this.props;
+        const { searchOrders, searchOrdersActions, menu, menuActions} = this.props;
 
         return (
             <div className="container sub-page" >
-                Orders
+                <SearchOrders searchOrdersR={searchOrders} searchOrdersActions={searchOrdersActions}
+                    menuR={menu} menuActions={menuActions} />
             </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    const { newOrders, menu } = state.createOrders;
+    const { searchOrders, menu } = state.orders;
 
     return {
-        // newOrders,
-        // menu
+        searchOrders,
+        menu
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        // newOrdersActions: bindActionCreators(actions.newOrdersActions, dispatch),
-        // menuActions: bindActionCreators(actions.menuActions, dispatch)
+        searchOrdersActions: bindActionCreators(actions.searchOrdersActions, dispatch),
+        menuActions: bindActionCreators(actions.menuActions, dispatch)
     };
 }
 

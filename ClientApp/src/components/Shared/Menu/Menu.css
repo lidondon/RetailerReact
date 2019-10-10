@@ -4,7 +4,7 @@
 }
 
 .background-image {
-    background: url('../../static_files/menu.jpg');
+    background: url('../../../static_files/menu.jpg');
     background-size: cover;
     height: 80vh;
 }

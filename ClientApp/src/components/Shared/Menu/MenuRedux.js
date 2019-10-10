@@ -1,11 +1,11 @@
-import { intIds2Strings } from '../../utilities/util';
+import { intIds2Strings } from '../../../utilities/util';
 
-const CLEAR_MENU = "CLEAR_MENU";
 const GET_MENU_CATEGORIES = "GET_MENU_CATEGORIES";
 const GET_MENU_CATEGORIES_URL = menuId => `/api/v1/retailer/activemenu/${menuId}/categories`;
 const GET_MENU_ITEMS = "GET_MENU_ITEMS";
 const GET_MENU_ITEMS_URL = (menuId, categoryId) => `/api/v1/retailer/activemenu/${menuId}/items?categoryId=${categoryId}`;
 
+const CLEAR_MENU = "CLEAR_MENU";
 const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";
 const ERROR = "ERROR";
@@ -44,9 +44,9 @@ export const getMenuItems = (menuId, categoryId) => {
 
 const reducer = (state = initialState, action) => {
     let resultCase = {
+        CLEAR_MENU: processClear,
         GET_MENU_CATEGORIES: processGetMenuCategories,
-        GET_MENU_ITEMS: processGetMenuItems,
-        CLEAR_MENU: processClear
+        GET_MENU_ITEMS: processGetMenuItems
     }
 
     return resultCase[action.type] ? resultCase[action.type](state, action) : state;

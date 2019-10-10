@@ -88,7 +88,7 @@ export const saveOrder = cellarerId => {
 
 const reducer = (state = initialState, action) => {
     let resultCase = {
-        CLEAR_LIQUOR: processClear,
+        CLEAR_NEW_ORDERS: processClear,
         GET_CELLARERS: processGetCellarers,
         GET_MENU_INFO: processGetMenuInfo,
         ADD_ITEMS: processAddItems,
@@ -102,7 +102,12 @@ const reducer = (state = initialState, action) => {
 
 const processClear = (state, action) => {
     return {
-        
+        isLoading: false,
+        error: "",
+        cellarers: [],
+        currentCellarer: {},
+        orders: {},
+        errorRowSet: {}
     };
 }
 
@@ -183,7 +188,7 @@ const processSaveItem = (state, action) => {
         errorRowSet[cellarerId].add(row.liquorId);
     } else {
         errorRowSet[cellarerId].delete(row.liquorId);
-        if (errorRowSet[cellarerId].size === 0) deleteFromErrorRowSet[cellarerId];
+        if (errorRowSet[cellarerId].size === 0) delete errorRowSet[cellarerId];
     }
 
     return { ...state, orders, errorRowSet };

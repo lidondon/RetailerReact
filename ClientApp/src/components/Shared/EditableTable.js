@@ -69,20 +69,6 @@ class EditableTable extends React.Component {
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     };
 
-    handleAdd = () => {
-        const { count, dataSource } = this.state;
-        const newData = {
-            key: count,
-            name: `Edward King ${count}`,
-            age: 32,
-            address: `London, Park Lane no. ${count}`,
-        };
-
-        this.setState({
-            dataSource: [...dataSource, newData],
-            count: count + 1,
-        });
-    };
 
     onSelectedChange = selectedRowKeys => {
         this.props.onSelectedChange(selectedRowKeys);
