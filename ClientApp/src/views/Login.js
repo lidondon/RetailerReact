@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
+import { Modal } from 'antd';
 
 import { isLogin } from '../utilities/authentication';
+import BaseView from './BaseView';
 import IconInput from '../components/Shared/IconInput';
 import * as actions from './LoginRedux';
 
-class Login extends Component {
+const USER_LOGIN = "用戶登入";
+const INPUT_ACCOUNT_PASSWORD = "請輸入帳號密碼";
+
+class Login extends BaseView {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,7 +25,8 @@ class Login extends Component {
         if (isLogin()) this.handleAlreadyLogin();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
         if (isLogin()) this.handleAlreadyLogin();
     }
 
@@ -38,8 +44,13 @@ class Login extends Component {
 
     handleLogin = () => {
         const { actions } = this.props;
-        console.log("handle login", actions);
-        actions.login(this.state.account, this.state.password);
+        const { account, password } = this.state;
+        
+        if (!account || !password) {
+            Modal.warning({ title: INPUT_ACCOUNT_PASSWORD });
+        } else {
+            actions.login(this.state.account, this.state.password);
+        }
     }
 
     render() {
@@ -65,15 +76,13 @@ const LoginBlock = props => {
     return (
         <div className="card">
             <article className="card-body">
-                <h4 className="card-title text-center mb-4 mt-1">Sign in</h4>
+                <h4 className="card-title text-center mb-4 mt-1">{USER_LOGIN}</h4>
                 <hr />
-                <form>
                     <IconInput icon="fa fa-user" placeHolder="Email or Account" type="email" onChange={handleAccountChanged} />
                     <IconInput icon="fa fa-lock" placeHolder="******" type="password" onChange={handlePasswordChanged} />
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary btn-block" onClick={props.login}> Login  </button>
+                        <button  className="btn btn-primary btn-block" onClick={props.login}> Login  </button>
                     </div>
-                </form>
             </article>
         </div>
     );
@@ -82,9 +91,10 @@ const LoginBlock = props => {
 
 
 function mapStateToProps(state) {
-    console.log("login state", state);
     return {
-        login: state.login
+        error: state.baseView,
+        login: state.login,
+        baseView: state.baseView
     };
 }
 

@@ -16,7 +16,7 @@ export const intIds2Strings = (objs, keyProps = ["id"]) => {
     return objs
 }
 
-export const StringIds2Ints = (objs, keyProps = ["id"]) => {
+export const stringIds2Ints = (objs, keyProps = ["id"]) => {
     objs.forEach(obj => keyProps.forEach(prop => {
         if (obj.hasOwnProperty(prop)) obj[prop] = parseInt(obj[prop]);
     }));
@@ -38,4 +38,27 @@ export const replaceNewObject = (objs, obj, keyProp) => {
     objs.splice(index, 1, newRow);
 
     return newRow;
+}
+
+export const assembleErrorMsg = (prefix, error) => {
+    let result = (error) ? `${prefix}: ${error.message}` : null;
+
+    try {
+        result = result ? `${result} => ${error.response.data.errors}` : result;
+    } catch (error) {
+    }
+
+    return result;
+}
+
+export const getObjKeysLength = obj => {
+    let result = 0;
+
+    for (let k in obj) result++;
+
+    return result;
+}
+
+export const compareArray = (a1, a2) => {
+    return JSON.stringify(a1) == JSON.stringify(a2);
 }

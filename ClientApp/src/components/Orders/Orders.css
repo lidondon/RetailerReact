@@ -1,0 +1,32 @@
+.title {
+    font-size: 24px;
+    font-weight: bolder;
+    color: black;
+}
+
+.box {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.row-operation {
+    margin-top: 10px;
+}
+
+.orderList {
+    font-weight: bolder;
+}
+
+.row-orders {
+    margin-top: 10px;
+}
+
+.filter {
+    margin-top: 10px;
+}
+
+.icon-edit {
+    font-size: 20px;
+    color: green;
+    margin-top: 5px;
+}

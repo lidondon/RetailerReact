@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Radio } from 'antd';
+import { Table } from 'antd';
 
-import './OrderList.css';
+import './Orders.css';
 
 const COLUMNS = [
     {

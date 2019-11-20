@@ -116,11 +116,24 @@ class EditableCell extends React.Component {
         const { record, handleSave } = this.props;
 
         this.form.validateFields((error, values) => {
-            handleSave({ ...record, ...values }, error);
+            if (!this.isTheSameValue(record, values)) handleSave({ ...record, ...values }, error);
             if (error && error[e.currentTarget.id]) return;
             this.toggleEdit();
         });
     };
+
+    isTheSameValue = (record, values) => {
+        let result = true;
+
+        for (let k in values) {
+            if (record[k] !== values[k]) {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
+    }
 
     renderCell = form => {
         this.form = form;

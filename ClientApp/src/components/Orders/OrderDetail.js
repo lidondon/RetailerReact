@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 
-//import './Order.css';
 import Order from './Order';
 
 const SELECT_CELLARER = "請選擇店家";
 
-class Order extends Component {
+class OrderDetail extends Component {
 
     render() {
-        const { items, onChange } = this.props;
+        const { items } = this.props;
 
         return (
             <Row>
@@ -23,4 +22,4 @@ class Order extends Component {
     }
 }
 
-export default Order;
+export default OrderDetail;

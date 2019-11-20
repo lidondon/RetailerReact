@@ -1,5 +1,5 @@
 {
-  "FilePath": "/Users/lidondon/BarMap/retailer/RetailerWeb/RetailerWeb.csproj",
+  "FilePath": "/Users/lidondon/BarMap/website/retailer/RetailerWeb/RetailerWeb.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-2.1",
     "LanguageVersion": "2.1",
@@ -2956,23 +2956,13 @@
         }
       }
     ],
-    "CSharpLanguageVersion": 800
+    "CSharpLanguageVersion": 703
   },
   "RootNamespace": "RetailerWeb",
   "Documents": [
     {
-      "FilePath": "Views/Home/Privacy.cshtml",
-      "TargetPath": "Views/Home/Privacy.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views/Shared/_CookieConsentPartial.cshtml",
-      "TargetPath": "Views/Shared/_CookieConsentPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "Views/Home/Index.cshtml",
-      "TargetPath": "Views/Home/Index.cshtml",
+      "FilePath": "Views/Shared/_EmptyLayout.cshtml",
+      "TargetPath": "Views/Shared/_EmptyLayout.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -2981,8 +2971,8 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views/Shared/Error.cshtml",
-      "TargetPath": "Views/Shared/Error.cshtml",
+      "FilePath": "Views/Shared/_CookieConsentPartial.cshtml",
+      "TargetPath": "Views/Shared/_CookieConsentPartial.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -2991,18 +2981,28 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "Views/Home/Privacy.cshtml",
+      "TargetPath": "Views/Home/Privacy.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "Views/Home/Index.cshtml",
+      "TargetPath": "Views/Home/Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "Views/_ViewStart.cshtml",
       "TargetPath": "Views/_ViewStart.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views/Shared/_Layout.cshtml",
-      "TargetPath": "Views/Shared/_Layout.cshtml",
+      "FilePath": "Views/Shared/Error.cshtml",
+      "TargetPath": "Views/Shared/Error.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "Views/Shared/_EmptyLayout.cshtml",
-      "TargetPath": "Views/Shared/_EmptyLayout.cshtml",
+      "FilePath": "Views/Shared/_Layout.cshtml",
+      "TargetPath": "Views/Shared/_Layout.cshtml",
       "FileKind": "mvc"
     }
   ],

@@ -1,4 +1,4 @@
-import { intIds2Strings, StringIds2Ints, pushNewObjectsNoDuplicate, replaceNewObject } from '../../utilities/util';
+import { intIds2Strings, stringIds2Ints, pushNewObjectsNoDuplicate, replaceNewObject } from '../../utilities/util';
 
 const SEARCH_ORDER_GET_CELLARERS = "SEARCH_ORDER_GET_CELLARERS";
 const GET_CELLARERS_URL = "/api/v1/retailer/coopcellarers";
@@ -7,7 +7,7 @@ const GET_ORDERS_URL = (startDate, endDate) => `/api/v1/retailer/orders?startDat
 const SEARCH_ORDER_GET_MENU_INFO = "SEARCH_ORDER_GET_MENU_INFO";
 const GET_MENU_INFO_URL = cellarerId => `/api/v1/retailer/coopcellarer/${cellarerId}/activemenu`;
 const SEARCH_ORDERS_UPDATE_ORDER = "SEARCH_ORDERS_UPDATE_ORDER";
-const SEARCH_ORDERS_UPDATE_ORDER_URL = id => `/api/v1/retailer/order/${id}/update`;
+const SEARCH_ORDERS_UPDATE_ORDER_URL = (id, isSubmit) => `/api/v1/retailer/order/${id}/update?isSubmit=${isSubmit}`;
 const GET_ORDER_ITEMS = "GET_ORDER_ITEMS";
 const GET_ORDER_ITEMS_URL = id => `/api/v1/retailer/order/${id}/items`;
 
@@ -86,19 +86,19 @@ export const saveItem = (row, error) => {
     };
 }
 
-export const updateOrder = (id, changes) => {
+export const updateOrder = (id, changes, isSubmit = false) => {
     return {
         type: SEARCH_ORDERS_UPDATE_ORDER,
         statuses: [ LOADING, SUCCESS, ERROR ],
-        url: SEARCH_ORDERS_UPDATE_ORDER_URL(id),
+        url: SEARCH_ORDERS_UPDATE_ORDER_URL(id, isSubmit),
         method: "post",
-        params: converStringIds2Ints(changes)
+        params: converstringIds2Ints(changes)
     };
 }
 
-const converStringIds2Ints = changes => {
+const converstringIds2Ints = changes => {
     if (changes.itemsToUpdate) {
-        StringIds2Ints(changes.itemsToUpdate, INT_2_STRING_PROPS);
+        stringIds2Ints(changes.itemsToUpdate, INT_2_STRING_PROPS);
     }
 
     if (changes.itemIdsToDelete) {

@@ -4,14 +4,19 @@ import { connect } from 'react-redux';
 import { Prompt } from "react-router-dom";
 
 import './CreateOrders.css';
+import BaseView from './BaseView';
 import { isEmptyObject } from '../utilities/util';
 import { actions } from './CreateOrdersRedux';
 import NewOrders from '../components/CreateOrders/NewOrders';
 
-class CreateOrders extends Component {
+class CreateOrders extends BaseView {
     componentWillUnmount() {
         this.props.newOrdersActions.clear();
         this.props.menuActions.clear();
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
     }
 
     isChanged = () => {
@@ -37,7 +42,8 @@ function mapStateToProps(state) {
 
     return {
         newOrders,
-        menu
+        menu, 
+        baseView: state.baseView
     };
 }
 

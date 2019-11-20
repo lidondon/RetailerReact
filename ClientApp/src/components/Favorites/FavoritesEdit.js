@@ -106,7 +106,7 @@ class FavoritesEdite extends Component {
             <div>
                 {isLoading && <Loading />}
                 <Row className="remind">
-                    <i class="fas fa-bell"/>{WARNING}
+                    <i className="fas fa-bell"/>{WARNING}
                 </Row>
                 <Row style={{marginTop: 10}}>
                     <Tabs type="card" onChange={this.onCategorySelect}>

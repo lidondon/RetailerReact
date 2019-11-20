@@ -7,7 +7,7 @@ import Dropdown from '../../Shared/Dropdown';
 import Loading from '../../Shared/Loading';
 
 
-const PURCHASE_TEXT = "訂購";
+const PURCHASE_TEXT = "加入訂單";
 const CATEGORY = "分類：";
 
 const COLUMNS = [
@@ -48,6 +48,11 @@ class Menu extends Component {
         };
     }
 
+    componentWillMount() {
+        this.clearAll();
+        if (this.props.id && this.props.menuActions) this.props.menuActions.getMenuCategories(this.props.id);
+    }
+
     componentWillUpdate(nextProps, nextState) {
         const categories = nextProps.menuR.categories;
         const { getMenuCategories } = this.props.menuActions;
@@ -86,7 +91,7 @@ class Menu extends Component {
         let state = { selectedCategory: e.key };
 
         if (!hasLoadCategories.has(e.key)) {
-            hasLoadCategories.add(e.key);
+            state.hasLoadCategories = hasLoadCategories.add(e.key);
             this.props.menuActions.getMenuItems(id, e.key);
         }
         this.setState(state);
@@ -149,7 +154,7 @@ class Menu extends Component {
                         rowKey="id" rowSelection={this.getRowSelection()} /> 
                 </Row>
                 <Row className="row-confirm">
-                    <Col span={3} offset={21}>
+                    <Col span={4} offset={20}>
                         <button type="button" className="btn btn-primary btn-confirm" onClick={this.onOk}>{PURCHASE_TEXT}</button>
                     </Col>
                 </Row>

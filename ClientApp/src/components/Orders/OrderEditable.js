@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 
-import './OrderEditable.css';
+import './Orders.css';
 import EditableTable from '../Shared/EditableTable';
 
 const REMOVE_TEXT = "移除";
@@ -28,34 +28,6 @@ const COLUMNS = [
 ];
 
 class OrderEditable extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         items: [],
-    //         selectedRowKeys: []
-    //     }
-    // }
-
-    // onItemSelectedChange = keys => {
-    //     let selectedRowKeys = { ...this.state.selectedRowKeys };
-    //     let categoryId = this.state.selectedCategory;
-
-    //     if (keys.length > 0) {
-    //         selectedRowKeys[categoryId] = keys;
-    //     } else {
-    //         delete selectedRowKeys[categoryId];
-    //     }
-    //     this.setState({ selectedRowKeys });
-    // }
-
-    // getRowSelection = () => {
-    //     const { selectedRowKeys, selectedCategory } = this.state;
-
-    //     return { 
-    //         selectedRowKeys: selectedRowKeys[selectedCategory], 
-    //         onChange: this.onItemSelectedChange
-    //     };
-    // }
 
     onSelectedChange = selectedRowKeys => {
         const { cellarerId, onSelectedChange } = this.props;
@@ -91,8 +63,20 @@ class OrderEditable extends Component {
         return this.props.rowKey ? this.props.rowKey : "key";
     }
 
+    saveOrder = () => {
+        const { cellarerId, items, onSave } = this.props;
+
+        onSave(cellarerId, items);
+    }
+
+    sendOrder = () => {
+        const { cellarerId, items, onSend } = this.props;
+
+        onSend(cellarerId, items);
+    }
+
     render() {
-        const { items, selectedRowKeys, isShowPagination, onSave } = this.props;
+        const { items, selectedRowKeys, isShowPagination } = this.props;
 
         return (
             <div className="box">
@@ -107,16 +91,16 @@ class OrderEditable extends Component {
                     {
                         (selectedRowKeys && selectedRowKeys.length > 0)
                         &&
-                        <Col span={4} offset={16} >
+                        <Col span={4} offset={12} >
                             <button type="button" className="btn btn-danger btn-confirm" onClick={this.onRemove} >{REMOVE_TEXT}</button>
                         </Col>
                     }
-                    <Col span={4} offset={(selectedRowKeys && selectedRowKeys.length > 0) ? 0 : 20} >
-                        <button type="button" className="btn btn-success btn-confirm" onClick={onSave} >{SAVE_TEXT}</button>
+                    <Col span={4} offset={(selectedRowKeys && selectedRowKeys.length > 0) ? 0 : 16} >
+                        <button type="button" className="btn btn-success btn-confirm" onClick={this.saveOrder} >{SAVE_TEXT}</button>
                     </Col>
-                    {/* <Col span={4}>
-                        <button type="button" className="btn btn-primary btn-confirm" >{SEND_TEXT}</button>
-                    </Col> */}
+                    <Col span={4}>
+                        <button type="button" className="btn btn-primary btn-confirm" onClick={this.sendOrder} >{SEND_TEXT}</button>
+                    </Col>
                 </Row>
             </div>
         );

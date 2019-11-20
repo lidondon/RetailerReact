@@ -1,66 +1,74 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Icon, Row, Col } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
+import { Button, Row, Col } from 'antd';
 
-import Logo from '../static_files/logo.png';
 import './Frame.css';
+import Logo from '../static_files/logo.png';
+import { isLogin, logout } from '../utilities/authentication';
+import { getUser } from '../utilities/authentication';
 
-const { SubMenu, Item } = Menu;
+const LOGIN = "登入";
+const LOGOUT = "登出";
+const HELLO = "哈囉";
 
 class Frame extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            current: "createOrder"
-        };
+
+    onLoginClick = e => {
+        this.props.history.push("/login");
     }
 
-    onClick = e => {
-        this.setState({ current: e.key });
-    };
+    onLogoutClick = e => {
+        logout();
+        this.props.history.push("/");
+    }
 
-    getOrderSuBmenu = () => {
-        return (
-            <SubMenu
-                title={
-                    <span className="submenu-title-wrapper">
-                        <i className="fab fa-wpforms icon" />
-                        訂單
-                    </span>
-                }>
-                <Item key="creatOrder">
-                    <a href="/#/orders/new">建立訂單</a>
-                </Item>
-                <Item key="mail">
-                    <a href="/#/orders">查詢訂單</a>
-                </Item>
-            </SubMenu>
-        );
+    getMenu = () => {
+        return isLogin() ? <HaveLogin onLogout={this.onLogoutClick} /> : 
+            <Row><Col offset={22}><Button onClick={this.onLoginClick}>{LOGIN}</Button></Col></Row>;
     }
 
     render () {
         return (
-            <div className="half-transparent">
+            <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div className="container">
-                    <Row>
-                        <Col span={3}>
-                            <Link  to="/">
-                                <img src={Logo} style={{height: 50}} alt="liquorder" />
-                            </Link>
-                        </Col>
-                        <Col span={21}>
-                            <Menu className="menu" theme="dark" onClick={this.onClick} selectedKeys={[this.state.current]} mode="horizontal">
-                                {this.getOrderSuBmenu()}
-                                <Item key="mail">
-                                    <a href="/#/favorites">偏好品項</a>
-                                </Item>
-                            </Menu>
-                        </Col>
-                    </Row>
+                    <Col span={3}>
+                        <Link className="navbar-brand" to="/">
+                            <img src={Logo} style={{width: "100%", height: "auto"}} alt="liquorder" />
+                        </Link>
+                    </Col>
+                    <Col span={21}>
+                        {this.getMenu()}
+                    </Col>
                 </div>
-            </div>
+            </nav>
         );
     }
 }
 
-export default Frame;
+const HaveLogin = props => {
+    return (
+        <Row>
+            <Col span={16}>
+                <div className="navbar-collapse collapse ">
+                    <ul className="navbar-nav flex-grow-1">
+                        <li className="nav-item">
+                            <Link className="nav-link text-dark" to="/orders/new">建立訂單</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-dark" to="/orders">查詢訂單</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-dark" to="/favorites">偏好品項</Link>
+                        </li>
+                    </ul>
+                </div>
+            </Col>
+            <Col span={8} >
+                <span className="hello">{`${HELLO}，${getUser()}`}</span>
+                <Button onClick={props.onLogout} className="login">{LOGOUT}</Button>
+            </Col>
+        </Row>
+    );
+}
+
+export default withRouter(Frame);

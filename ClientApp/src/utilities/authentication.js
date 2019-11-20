@@ -1,13 +1,26 @@
-const AUTH_TOKEN = "authToken";
+const TOKEN = "token";
+const REFRESH_TOKEN = "refreshToken";
+const USER = "user";
 
 export const isLogin = () => {
-    return (sessionStorage.getItem(AUTH_TOKEN)) ? true : false;
+    return (sessionStorage.getItem(TOKEN)) ? true : false;
 }
 
-export const setAuthToken = token => {
-    sessionStorage.setItem(AUTH_TOKEN, token);
+export const setLoginData = (token, refreshToken, user) => {
+    sessionStorage.setItem(TOKEN, token);
+    sessionStorage.setItem(REFRESH_TOKEN, refreshToken);
+    sessionStorage.setItem(USER, user);
 }
 
 export const getAuthToken = () => {
-    return sessionStorage.getItem("authToken");
+    return { token: sessionStorage.getItem(TOKEN), refreshToken: sessionStorage.getItem(REFRESH_TOKEN) };
+}
+
+export const getUser = () => {
+    return sessionStorage.getItem(USER);
+}
+
+export const logout = () => {
+    sessionStorage.removeItem(TOKEN);
+    sessionStorage.removeItem(REFRESH_TOKEN);
 }

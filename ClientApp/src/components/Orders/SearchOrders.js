@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Modal } from 'antd';
 import moment from 'moment';
 
-import './SearchOrders.css';
+import './Orders.css';
 import Loading from '../Shared/Loading';
 import StartEndDate from '../Shared/StartEndDate';
 import FewCellarers from '../Shared/Cellarer/FewCellarers';
@@ -10,12 +10,14 @@ import OrderList from './OrderList';
 import { isEmptyObject } from '../../utilities/util';
 
 const DATE_STRING_FORMAT = "YYYY-MM-DD";
+const RANGE = "起迄日期：";
+const CELLARER = "酒商：";
 
 class SearchOrders extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dateRange: [moment().subtract(1, "months"), moment()]
+            dateRange: [moment().subtract(1, "months"), moment().add(1, "days")]
         };
     }
 
@@ -78,10 +80,10 @@ const Filter = props => {
     return (
         <div>
             <Row className="filter">
-                <StartEndDate startDate={dateRange[0]} endDate={dateRange[1]} />
+                <span>{RANGE}</span><StartEndDate startDate={dateRange[0]} endDate={dateRange[1]} />
             </Row>
             <Row className="filter">
-                <FewCellarers items={items} />
+                <span>{CELLARER}</span><FewCellarers items={items} />
             </Row>
         </div>
     );

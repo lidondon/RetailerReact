@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Tag, Modal } from 'antd';
 
-import './OrderList.css';
+import './Orders.css';
 import OrderDetailEditable from './OrderDetailEditable';
+import OrderDetail from './OrderDetail';
 
 const PURCHASE_TEXT = "訂購";
 const CATEGORY = "分類：";
@@ -10,6 +11,7 @@ const OK = "確定" ;
 const CANCEL = "取消";
 const NOT_SAVE_YET = "尚未儲存，確定要離開？";
 const UPDATE_ORDER_SUCCESS = "更新訂單成功";
+const SAVE = "SAVE";
 const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";
 const ERROR = "ERROR";
@@ -17,20 +19,20 @@ const ERROR = "ERROR";
 const { confirm } = Modal;
 const COLUMNS = [
     {
-        title: "建立時間",
-        dataIndex: "createdAt",
-        width: "50%"
+        title: "單號",
+        dataIndex: "formNumber",
+        width: "40%"
+    },
+    {
+        title: "酒吧",
+        dataIndex: "merchantName",
+        width: "40%"
     },
     {
         title: "狀態",
-        dataIndex: "orderStatusId",
+        dataIndex: "orderStatus",
         width: "20%",
-        render: (text, record) => <Tag color="green">等待確認</Tag>
-    },
-    {
-        title: "建立人",
-        dataIndex: "updatedBy",
-        width: "30%"
+        render: (text, record) => <Tag color="green">{text}</Tag>
     }
 ];
 
@@ -40,7 +42,9 @@ class OrderList extends Component {
         this.state = {
             row: {},
             showModal: false,
-            selectedRowKeys: []
+            selectedRowKeys: [],
+            showModalMenu: false,
+            isShowMenu: false
         };
     }
 
@@ -54,7 +58,7 @@ class OrderList extends Component {
         Modal.success({
             title: UPDATE_ORDER_SUCCESS
         });
-        this.setState({ showModal: false });
+        this.setState({ showModal: false, isShowMenu: false });
     }
 
     onRowClick = record => {
@@ -69,7 +73,7 @@ class OrderList extends Component {
         return {
             onClick: e => this.onRowClick(record)
         };
-      }
+    }
 
     onCancelModal = () => {
         if (this.props.isChanged) {
@@ -81,7 +85,7 @@ class OrderList extends Component {
 
     reallyCancelModal = () => {
         this.props.searchOrdersActions.clearOrderInfo();
-        this.setState({ showModal: false, selectedRowKeys: [] });
+        this.setState({ showModal: false, selectedRowKeys: [], isShowMenu: false });
     }
 
     confirmCacelModel = () => {
@@ -107,21 +111,32 @@ class OrderList extends Component {
         this.setState({ selectedRowKeys: [] });
     }
 
+    showMenu = () => {
+        this.setState({ isShowMenu: true });
+    }
+
     getModalContent = () => {
         const { searchOrdersR, searchOrdersActions, menuR, menuActions } = this.props;
-        const { row, selectedRowKeys } = this.state;
-        let result = (
-            <OrderDetailEditable id={row.id} menuR={menuR} menuActions={menuActions} 
-                selectedRowKeys={selectedRowKeys} onSelectedChange={this.onSelectedChange}
-                searchOrdersR={searchOrdersR} searchOrdersActions={searchOrdersActions}
-                onBatchDelete={this.onBatchDelete} />
-        );
+        const { row, selectedRowKeys, isShowMenu } = this.state;
 
-        return result;
+        if (row.orderStatus === SAVE) {
+            return (
+                <OrderDetailEditable id={row.id} menuR={menuR} menuActions={menuActions} 
+                    selectedRowKeys={selectedRowKeys} onSelectedChange={this.onSelectedChange}
+                    searchOrdersR={searchOrdersR} searchOrdersActions={searchOrdersActions}
+                    onBatchDelete={this.onBatchDelete} name={row.merchantName}
+                    isShowMenu={isShowMenu} showMenu={this.showMenu} />
+            );
+        } else {
+            return <OrderDetail items={searchOrdersR.orderItems} />
+        }
+    }
+
+    getModalWidth = () => {
+        return this.state.isShowMenu ? "80%" : "33%";
     }
     
     render() {
-        //const { } = this.state;
         const { orders, searchOrdersR, searchOrdersActions } = this.props;
         const { showModal } = this.state;
 
@@ -129,7 +144,7 @@ class OrderList extends Component {
             <div>
                 <Table showHeader={false} columns={COLUMNS} className="orderList"
                     dataSource={orders} rowKey="id" pagination={false} onRow={this.onRow} /> 
-                <Modal width="80%" visible={showModal} onCancel={this.onCancelModal} footer={null}>
+                <Modal width={this.getModalWidth()} visible={showModal} onCancel={this.onCancelModal} footer={null}>
                     {this.getModalContent()}
                 </Modal>
             </div>

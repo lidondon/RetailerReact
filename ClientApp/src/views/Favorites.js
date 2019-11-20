@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import BaseView from './BaseView';
 //import { isEmptyObject } from '../utilities/util';
 import { actions } from './FavoritesRedux';
 import FavoriteEdit from '../components/Favorites/FavoritesEdit';
 
-class CreateOrders extends Component {
+class CreateOrders extends BaseView {
+
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
+    }
+
     render() {
         const { favorites, favoritesActions } = this.props;
 
@@ -22,7 +28,8 @@ function mapStateToProps(state) {
     const { favorites } = state.favorites;
 
     return {
-        favorites
+        favorites,
+        baseView: state.baseView
     };
 }
 

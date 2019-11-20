@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Modal } from 'antd';
 
-//import './Order.css';
+import './Orders.css';
 import OrderEditable from './OrderEditable';
 import Menu from '../Shared/Menu/Menu';
 
@@ -15,15 +15,26 @@ class OrderDetailEditable extends Component {
     //     }
     // }
 
-    
+    onSave = () => {
+        this.updateOrder(false);
+    }
 
-    updateOrder = () => {
+    onSend = () => {
+        this.updateOrder(true);
+    }
+
+    updateOrder = isSubmit => {
         const { changes, errorRowSet } = this.props.searchOrdersR;
         const { updateOrder } = this.props.searchOrdersActions;
         const { id } = this.props;
 
         if (errorRowSet.size === 0) {
-            updateOrder(id, changes);
+            if (changes.itemsToUpdate) {
+                let intId = parseInt(id);
+
+                changes.itemsToUpdate.map(i => i.orderId = intId);
+            }
+            updateOrder(id, changes, isSubmit);
         } else {
             Modal.warning({
                 title: NOT_COMPLETED_ORDER
@@ -31,23 +42,46 @@ class OrderDetailEditable extends Component {
         }
     }
 
+    getOrderSpan = () => {
+        return this.props.isShowMenu ? 10 : 24;
+    }
+
     render() {
         const { id, menuR, menuActions, searchOrdersR, searchOrdersActions
-            , selectedRowKeys, onSelectedChange, onBatchDelete } = this.props;
+            , selectedRowKeys, onSelectedChange, onBatchDelete, isShowMenu, showMenu, name } = this.props;
         const { orderItems, menuId } = searchOrdersR;
         const { addItems, saveItem } = searchOrdersActions;
 
         return (
-            <Row>
-                <Col span={10}>
-                    <OrderEditable items={orderItems} isShowPagination={false} onSaveItem={saveItem} 
-                        onSave={this.updateOrder} selectedRowKeys={selectedRowKeys} 
-                        onSelectedChange={onSelectedChange} onBatchDelete={onBatchDelete} />
-                </Col>
-                <Col span={14}>
-                    <Menu id={menuId} menuR={menuR} menuActions={menuActions} onOk={addItems} />
-                </Col>
-            </Row>
+            <div>
+                <Row align="bottom" justify="center">
+                    <Col span={21}>
+                        <span className="title">{name}</span>
+                    </Col>
+                    {
+                        !isShowMenu &&
+                        <Col span={3}>
+                            <a href="javascript: void(0)" onClick={showMenu} >
+                                <i className="fas fa-edit icon-edit"></i>
+                            </a>
+                        </Col>
+                    }
+                </Row>
+                <Row>
+                    <Col span={this.getOrderSpan()}>
+                        <OrderEditable items={orderItems} isShowPagination={false} onSaveItem={saveItem} 
+                            onSave={this.onSave} selectedRowKeys={selectedRowKeys} 
+                            onSend={this.onSend}
+                            onSelectedChange={onSelectedChange} onBatchDelete={onBatchDelete} />
+                    </Col>
+                    {
+                        isShowMenu && 
+                        <Col span={14}>
+                            <Menu id={menuId} menuR={menuR} menuActions={menuActions} onOk={addItems} />
+                        </Col>
+                    }
+                </Row>
+            </div>
         );
     }
 }

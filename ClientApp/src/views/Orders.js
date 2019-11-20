@@ -3,14 +3,18 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 //import './CreateOrders.css';
-
+import BaseView from './BaseView';
 import { actions } from './OrdersRedux';
 import SearchOrders from '../components/Orders/SearchOrders';
 
-class Orders extends Component {
+class Orders extends BaseView {
+    
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
+    }
 
     render() {
-        const { searchOrders, searchOrdersActions, menu, menuActions} = this.props;
+        const { searchOrders, searchOrdersActions, menu, menuActions } = this.props;
 
         return (
             <div className="container sub-page" >
@@ -26,7 +30,8 @@ function mapStateToProps(state) {
 
     return {
         searchOrders,
-        menu
+        menu,
+        baseView: state.baseView
     };
 }
 

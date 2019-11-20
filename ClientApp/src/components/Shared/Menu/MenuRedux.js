@@ -25,7 +25,6 @@ export const clear = () => {
 }
 
 export const getMenuCategories = id => {
-    console.log("getMenuCategories", id)
     return {
         type: GET_MENU_CATEGORIES,
         statuses: [ LOADING, SUCCESS, ERROR ],

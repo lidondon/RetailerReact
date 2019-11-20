@@ -1,11 +1,11 @@
-import { intIds2Strings, pushNewObjectsNoDuplicate, replaceNewObject } from '../../utilities/util';
+import { intIds2Strings, stringIds2Ints, pushNewObjectsNoDuplicate, replaceNewObject } from '../../utilities/util';
 
 const GET_CELLARERS = "GET_CELLARERS";
 const GET_CELLARERS_URL = "/api/v1/retailer/coopcellarers";
 const GET_MENU_INFO = "GET_MENU_INFO";
 const GET_MENU_INFO_URL = cellarerId => `/api/v1/retailer/coopcellarer/${cellarerId}/activemenu`;
 const SAVE_ORDER = "SAVE_ORDER";
-const SAVE_ORDER_URL = "/api/v1/retailer/order/create";
+const SAVE_ORDER_URL = isSubmit => `/api/v1/retailer/order/create?isSubmit=${isSubmit}`;
 
 const CLEAR_NEW_ORDERS = "CLEAR_NEW_ORDERS";
 const ADD_ITEMS = "ADD_ITEMS";
@@ -14,7 +14,7 @@ const SAVE_ITEM = "SAVE_ITEM";
 const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";
 const ERROR = "ERROR";
-const INT_2_STRING_PROPS = ["id", "liquorId"];
+const INT_2_STRING_PROPS = ["id", "liquorId", "quantity"];
 
 
 const initialState = {
@@ -23,7 +23,8 @@ const initialState = {
     cellarers: [],
     currentCellarer: {},
     orders: {},
-    errorRowSet: {}
+    errorRowSet: {},
+    successCellarerName: null
 }
 
 export const clear = () => {
@@ -73,17 +74,28 @@ export const saveItem = (cellarerId, row, error) => {
     };
 }
 
-export const saveOrder = cellarerId => {
+export const saveOrder = (cellarerId, items, isSubmit = false) => {
     return {
         type: SAVE_ORDER,
         method: "post",
         statuses: [ LOADING, SUCCESS, ERROR ],
-        url: SAVE_ORDER_URL,
+        url: SAVE_ORDER_URL(isSubmit),
         params: {
             merchantId: parseInt(cellarerId),
-            consumerId: 0
-        }
+            orderitemRequest: {
+                itemsToUpdate: convertOrder2ItemsToUpdateFrom(items)
+            }
+        },
+        cellarerId
     };
+}
+
+const convertOrder2ItemsToUpdateFrom = items => {
+    let result = stringIds2Ints(items, INT_2_STRING_PROPS);
+
+    result.forEach(r => r.orderId = 0);
+
+    return result;
 }
 
 const reducer = (state = initialState, action) => {
@@ -187,8 +199,8 @@ const processSaveItem = (state, action) => {
         if (!errorRowSet[cellarerId]) errorRowSet[cellarerId] = new Set();
         errorRowSet[cellarerId].add(row.liquorId);
     } else {
-        errorRowSet[cellarerId].delete(row.liquorId);
-        if (errorRowSet[cellarerId].size === 0) delete errorRowSet[cellarerId];
+        if (errorRowSet[cellarerId]) errorRowSet[cellarerId].delete(row.liquorId);
+        if (errorRowSet[cellarerId] && errorRowSet[cellarerId].size === 0) delete errorRowSet[cellarerId];
     }
 
     return { ...state, orders, errorRowSet };
@@ -196,16 +208,22 @@ const processSaveItem = (state, action) => {
 
 const processSaveOrder = (state, action) => {
     const { cellarerId } = action;
-    const { orders } = state;
+    const { orders, cellarers } = state;
     let result = getBaseAxiosResult(state, action);
 
-    console.log("processSaveOrder", action);
     if (action.status === SUCCESS && action.payload) {
         delete orders[cellarerId];
         result.orders = orders;
+        result.successCellarerName = getCellarerNameById(cellarers, cellarerId);
     }
     
     return result;
+}
+
+const getCellarerNameById = (cellarers, id) => {
+    const cellarer = cellarers.find(c => c.id === id);
+
+    return cellarer ? cellarer.name : null;
 }
 
 const getBaseAxiosResult = (state, action) => {

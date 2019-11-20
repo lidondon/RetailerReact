@@ -1,7 +1,13 @@
 import axios from 'axios';
-import { isLogin, getAuthToken } from '../utilities/authentication';
+import { isLogin, getAuthToken, setLoginData, getUser } from '../utilities/authentication';
 
-const BASE_URL = "http://ec2-3-112-213-86.ap-northeast-1.compute.amazonaws.com:8082";
+import { SERVER_ERROR } from '../views/BaseViewRedux';
+
+//const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://ec2-3-112-213-86.ap-northeast-1.compute.amazonaws.com:8086";
+const AUTH_BASE_URL = "http://ec2-3-112-213-86.ap-northeast-1.compute.amazonaws.com:8083";
+const AUTH_HEARDER = "Authorization";
+const BEARER_PREFIX = "Bearer ";
 
 const axiosMiddelware = store => next => action => {
     if (!action.url || !Array.isArray(action.statuses)) return next(action);
@@ -17,7 +23,7 @@ const axiosMiddelware = store => next => action => {
         data: action.params
     }
     
-    addTokenInHeader(axiosConfig.headers);
+    addAuthInfoInHeader(axiosConfig.headers);
     next({
         type: action.type,
         status: LOADING,
@@ -32,19 +38,82 @@ const axiosMiddelware = store => next => action => {
             payload: response.data,
             ...action
         });
-    }).catch (error => {
-        next({
-            type: action.type,
-            status: ERROR,
-            isLoading: false,
-            error
-        })
+    }).catch(error => {
+        if (error.response && error.response.status === 401) {
+            refreshAndRecall().then(() => {
+                addAuthInfoInHeader(axiosConfig.headers);
+                axios(axiosConfig).then(response => {
+                    next({
+                        type: action.type,
+                        status: SUCCESS,
+                        isLoading: false,
+                        payload: response.data,
+                        ...action
+                    });
+                }).catch(errorRecall => { 
+                    next({
+                        type: action.type,
+                        status: ERROR,
+                        isLoading: false
+                    });
+                    next({
+                        type: SERVER_ERROR,
+                        error: errorRecall
+                    });
+                });
+            }).catch(errorRefresh => {
+                next({
+                    type: action.type,
+                    status: ERROR,
+                    isLoading: false
+                });
+                next({
+                    type: SERVER_ERROR,
+                    error: errorRefresh
+                });
+            });
+        } else {
+            next({
+                type: SERVER_ERROR,
+                error
+            });
+        }
     });
 }
 
-const addTokenInHeader = headers => {
+const refreshAndRecall = () => {
+    return new Promise((resolve, reject) => {
+        const tokenInfo = getAuthToken();
+
+        if (tokenInfo.token && tokenInfo.refreshToken) {
+            const axiosConfig = {
+                baseURL: AUTH_BASE_URL,
+                method: "post",
+                url: "/api/v1/identity/refresh",
+                headers: { 
+                    "Content-Type": "application/json",
+                },
+                data: {
+                    token: tokenInfo.token,
+                    refreshToken: tokenInfo.refreshToken
+                }
+            }
+
+            axios(axiosConfig).then(response => {
+                setLoginData(response.data.token, response.data.refreshToken, getUser());
+                resolve();
+            }).catch(error => { 
+                reject(error);
+            });
+        } else {
+            reject();
+        }
+    });
+}
+
+const addAuthInfoInHeader = headers => {
     if (isLogin()) {
-        headers.authToken = getAuthToken();
+        headers[AUTH_HEARDER] = `${BEARER_PREFIX}${getAuthToken().token}`;
     }
 }
 

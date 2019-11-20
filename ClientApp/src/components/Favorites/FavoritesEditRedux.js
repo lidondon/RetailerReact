@@ -2,9 +2,9 @@ import { intIds2Strings } from '../../utilities/util';
 
 const CLEAR_FAVORITES = "CLEAR_FAVORITES";
 const GET_LIQUOR_CATEGORIES = "GET_LIQUOR_CATEGORIES";
-const GET_LIQUOR_CATEGORIES_URL = "/api/v1/cellarer/liquor/categories";
+const GET_LIQUOR_CATEGORIES_URL = "/api/v1/retailer/liquor/categories";
 const GET_LIQUORS = "GET_LIQUORS";
-const GET_LIQUORS_URL = categoryId => `/api/v1/cellarer/liquors?categoryId=${categoryId}`;
+const GET_LIQUORS_URL = categoryId => `/api/v1/retailer/liquors?categoryId=${categoryId}`;
 
 const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";

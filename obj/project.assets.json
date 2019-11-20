@@ -12079,11 +12079,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/lidondon/BarMap/retailer/RetailerWeb/RetailerWeb.csproj",
+      "projectUniqueName": "/Users/lidondon/BarMap/website/retailer/RetailerWeb/RetailerWeb.csproj",
       "projectName": "RetailerWeb",
-      "projectPath": "/Users/lidondon/BarMap/retailer/RetailerWeb/RetailerWeb.csproj",
+      "projectPath": "/Users/lidondon/BarMap/website/retailer/RetailerWeb/RetailerWeb.csproj",
       "packagesPath": "/Users/lidondon/.nuget/packages/",
-      "outputPath": "/Users/lidondon/BarMap/retailer/RetailerWeb/obj/",
+      "outputPath": "/Users/lidondon/BarMap/website/retailer/RetailerWeb/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"

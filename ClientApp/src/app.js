@@ -1,22 +1,18 @@
+import 'antd/dist/antd.css';
 import React from 'react';
 import { render } from 'react-dom';
-import { HashRouter, Route } from 'react-router-dom';
-import { createStore, applyMiddleware } from 'redux';
+import { HashRouter, Route, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import 'antd/dist/antd.css';
 import './app.css'
-
-import AxiosMiddleware from './middlewares/AxiosMiddleware';
-import reducers from './redux/rootReducers';
 import Frame from './layouts/Frame';
 import Home from './views/Home';
 import Login from './views/Login';
 import CreateOrders from './views/CreateOrders';
 import Orders from './views/Orders';
 import Favorites from './views/Favorites';
-
-const store = createStore(reducers, applyMiddleware(AxiosMiddleware));
+import { isLogin } from './utilities/authentication';
+import Store from './redux/store';
 
 class App extends React.Component {
     render () {
@@ -27,17 +23,21 @@ class App extends React.Component {
                     <Frame />
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
-                    <Route exact path="/orders/new" component={CreateOrders}/>
-                    <Route exact path="/orders" component={Orders}/>
-                    <Route exact path="/favorites" component={Favorites}/>
+                    <PrivateRoute exact path="/orders/new" component={CreateOrders}/>
+                    <PrivateRoute exact path="/orders" component={Orders}/>
+                    <PrivateRoute exact path="/favorites" component={Favorites}/>
                 </div>
             </HashRouter>
         );
     }
 }
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) => isLogin()  ? <Component {...props} /> : <Redirect to='/login' />} />
+)
+
 render(
-    <Provider store={store}>
+    <Provider store={Store}>
         <App />
     </Provider>
 , document.getElementById('app'));
