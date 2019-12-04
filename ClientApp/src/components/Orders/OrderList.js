@@ -46,7 +46,7 @@ const COLUMNS = [
         title: "建立時間",
         dataIndex: "createDateTime",
         width: "25%"
-    },
+    }
 ];
 
 class OrderList extends Component {

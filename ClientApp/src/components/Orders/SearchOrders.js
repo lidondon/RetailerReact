@@ -43,8 +43,6 @@ class SearchOrders extends Component {
         if ((this.state.currentCellarer !== nextState.currentCellarer)
             || (this.state.currentStatus !== nextState.currentStatus)) {
             filterChanged = true;
-            // if (nextState.currentCellarer) filteredOrders = filteredOrders.filter(o => o.merchantId === nextState.currentCellarer);
-            // if (nextState.currentStatus) filteredOrders = filteredOrders.filter(o => o.orderStatus === nextState.currentStatus);
             filteredOrders = filteredOrders.filter(o => { 
                 let result = false;
 
