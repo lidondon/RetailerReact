@@ -6,7 +6,7 @@ import Loading from '../Shared/Loading';
 import FewCellarers from '../Shared/Cellarer/FewCellarers';
 import Menu from '../Shared/Menu/Menu';
 import OrderEditable from '../Orders/OrderEditable';
-import { getObjKeysLength, compareArray } from '../../utilities/util';
+import { compareArray } from '../../utilities/util';
 
 const CELLARER = "酒商：";
 const SAVE_ORDER_SUCCESS = "訂單儲存成功！";
@@ -16,8 +16,6 @@ const panelStyle = {
     marginBottom: 16,
     border: 0
 };
-
-const { Panel } = Collapse;
 
 const SAVE_ORDER_ERROR = name => `[${name}]尚未填妥必填欄位`;
 
@@ -142,9 +140,9 @@ class NewOrders extends Component {
 
     render() {
         const { menuR, menuActions, newOrdersR, newOrdersActions } = this.props;
-        const { isLoading, cellarers, currentCellarer } = newOrdersR;
+        const { isLoading, cellarers, currentCellarer, orders } = newOrdersR;
         const { addItems } = newOrdersActions;
-        const { openedPanel } = this.state; //don't know why Collapse's defaultActiveKey doesn't work
+        const { selectedRowKeys } = this.state; //don't know why Collapse's defaultActiveKey doesn't work
         
         return (
             <div>
@@ -152,16 +150,13 @@ class NewOrders extends Component {
                 <span>{CELLARER}</span><Cellarers className="cellarers" cellarers={cellarers} onChange={this.onCellarerSelected}/>
                 <Row className="menu-order">
                     <Col span={14}>
-                        <Menu id={currentCellarer.menuId} menuR={menuR} menuActions={menuActions} onOk={addItems} />
+                        <Menu id={currentCellarer.menuId} menuR={menuR} menuActions={menuActions} 
+                            onOk={addItems} orderItems={orders[currentCellarer.id]} />
                     </Col>
                     <Col span={9} className="col-orders">
-                        <Collapse
-                            className="order-collapse"
-                            bordered={false}
-                            defaultActiveKey={openedPanel}
-                            expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />} >
-                            {this.getPanels()}
-                        </Collapse>
+                        <Panel cellarers={cellarers} orders={orders} selectedRowKeys={selectedRowKeys}
+                            onSaveItem={this.onSaveItem} onSelectedOrderItemsChange={this.onSelectedOrderItemsChange}
+                            onBatchDelete={this.onBatchDelete} onSave={this.onSave} onSend={this.onSend} />
                     </Col>
                 </Row>
             </div>
@@ -174,6 +169,37 @@ const Cellarers = props => {
     let items = cellarers.map(c => ({value: c.id, text: c.name}));
     
     return (items.length > 5) ? "coming soon" : <FewCellarers items={items} onChange={onChange} hasDefault={true} />
+}
+
+const Panel = props => {
+    const { cellarers, orders, selectedRowKeys, onSaveItem, onSelectedOrderItemsChange,
+        onBatchDelete, onSave, onSend } = props;
+    let result = [];
+
+    for (let k in orders) {
+        let cellarer = cellarers.find(c => c.id === k);
+
+        if (cellarer) result.push(
+            <div className="card" key={cellarer.id}>
+                <div className="card-header">
+                    <a className="collapsed card-link" data-toggle="collapse" href="javascript: void(0)">
+                        {cellarer.name}
+                    </a>
+                </div>
+                <div className="collapse show">
+                    <div className="card-body">
+                        <OrderEditable cellarerId={cellarer.id} items={orders[k]} selectedRowKeys={selectedRowKeys[k]}
+                            isShowPagination={false} onSaveItem={onSaveItem} rowKey="liquorId"
+                            onSelectedChange={onSelectedOrderItemsChange}
+                            onBatchDelete={onBatchDelete}
+                            onSave={onSave} onSend={onSend}/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+return <Row>{result}</Row>;
 }
 
 export default NewOrders;

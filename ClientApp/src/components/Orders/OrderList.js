@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import { Table, Tag, Modal } from 'antd';
 
 import './Orders.css';
+import { STATUSES } from '../../constants/order';
 import OrderDetailEditable from './OrderDetailEditable';
 import OrderDetail from './OrderDetail';
+
+export const STATUS_COLORS = {
+    "SUBMIT": "green",
+    "ACCEPT": "darkgreen",
+    "REJECT": "tomato"
+}
 
 const PURCHASE_TEXT = "訂購";
 const CATEGORY = "分類：";
@@ -17,23 +24,29 @@ const SUCCESS = "SUCCESS";
 const ERROR = "ERROR";
 
 const { confirm } = Modal;
+
 const COLUMNS = [
     {
         title: "單號",
         dataIndex: "formNumber",
-        width: "40%"
+        width: "30%"
     },
     {
         title: "酒吧",
         dataIndex: "merchantName",
-        width: "40%"
+        width: "30%"
     },
     {
         title: "狀態",
         dataIndex: "orderStatus",
-        width: "20%",
-        render: (text, record) => <Tag color="green">{text}</Tag>
-    }
+        width: "15%",
+        render: (text, record) => <Tag color={STATUS_COLORS[text]}>{text}</Tag>
+    },
+    {
+        title: "建立時間",
+        dataIndex: "createDateTime",
+        width: "25%"
+    },
 ];
 
 class OrderList extends Component {
@@ -121,28 +134,35 @@ class OrderList extends Component {
 
         if (row.orderStatus === SAVE) {
             return (
-                <OrderDetailEditable id={row.id} menuR={menuR} menuActions={menuActions} 
+                <OrderDetailEditable row={row} menuR={menuR} menuActions={menuActions} 
                     selectedRowKeys={selectedRowKeys} onSelectedChange={this.onSelectedChange}
                     searchOrdersR={searchOrdersR} searchOrdersActions={searchOrdersActions}
-                    onBatchDelete={this.onBatchDelete} name={row.merchantName}
+                    onBatchDelete={this.onBatchDelete} 
                     isShowMenu={isShowMenu} showMenu={this.showMenu} />
             );
         } else {
-            return <OrderDetail items={searchOrdersR.orderItems} />
+            return <OrderDetail row={row} items={searchOrdersR.orderItems} />
         }
     }
 
     getModalWidth = () => {
-        return this.state.isShowMenu ? "80%" : "33%";
+        const { row } = this.state;
+        let result = "80%";
+
+        if (row.orderStatus === STATUSES.SAVE) {
+            result = this.state.isShowMenu ? "80%" : "35%";
+        }
+
+        return result;
     }
     
     render() {
-        const { orders, searchOrdersR, searchOrdersActions } = this.props;
+        const { orders } = this.props;
         const { showModal } = this.state;
 
         return (
             <div>
-                <Table showHeader={false} columns={COLUMNS} className="orderList"
+                <Table showHeader={true} columns={COLUMNS} className="orderList"
                     dataSource={orders} rowKey="id" pagination={false} onRow={this.onRow} /> 
                 <Modal width={this.getModalWidth()} visible={showModal} onCancel={this.onCancelModal} footer={null}>
                     {this.getModalContent()}

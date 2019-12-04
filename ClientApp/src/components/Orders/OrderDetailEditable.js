@@ -4,6 +4,7 @@ import { Row, Col, Modal } from 'antd';
 import './Orders.css';
 import OrderEditable from './OrderEditable';
 import Menu from '../Shared/Menu/Menu';
+import { datetimeString2DateString } from '../../utilities/util';
 
 const NOT_COMPLETED_ORDER = "尚未填妥必填欄位！";
 
@@ -26,7 +27,7 @@ class OrderDetailEditable extends Component {
     updateOrder = isSubmit => {
         const { changes, errorRowSet } = this.props.searchOrdersR;
         const { updateOrder } = this.props.searchOrdersActions;
-        const { id } = this.props;
+        const { id } = this.props.row;
 
         if (errorRowSet.size === 0) {
             if (changes.itemsToUpdate) {
@@ -47,8 +48,8 @@ class OrderDetailEditable extends Component {
     }
 
     render() {
-        const { id, menuR, menuActions, searchOrdersR, searchOrdersActions
-            , selectedRowKeys, onSelectedChange, onBatchDelete, isShowMenu, showMenu, name } = this.props;
+        const { row, menuR, menuActions, searchOrdersR, searchOrdersActions
+            , selectedRowKeys, onSelectedChange, onBatchDelete, isShowMenu, showMenu } = this.props;
         const { orderItems, menuId } = searchOrdersR;
         const { addItems, saveItem } = searchOrdersActions;
 
@@ -56,7 +57,8 @@ class OrderDetailEditable extends Component {
             <div>
                 <Row align="bottom" justify="center">
                     <Col span={21}>
-                        <span className="title">{name}</span>
+                        <span className="title">{row.merchantName}</span>
+                        <span className="date">{datetimeString2DateString(row.createDateTime)}</span>
                     </Col>
                     {
                         !isShowMenu &&
@@ -77,7 +79,7 @@ class OrderDetailEditable extends Component {
                     {
                         isShowMenu && 
                         <Col span={14}>
-                            <Menu id={menuId} menuR={menuR} menuActions={menuActions} onOk={addItems} />
+                            <Menu id={menuId} menuR={menuR} menuActions={menuActions} orderItems={orderItems} onOk={addItems} />
                         </Col>
                     }
                 </Row>

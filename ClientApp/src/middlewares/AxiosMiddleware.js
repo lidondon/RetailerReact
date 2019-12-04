@@ -74,6 +74,10 @@ const axiosMiddelware = store => next => action => {
             });
         } else {
             next({
+                type: action.type,
+                isLoading: false
+            });
+            next({
                 type: SERVER_ERROR,
                 error
             });
@@ -103,7 +107,14 @@ const refreshAndRecall = () => {
                 setLoginData(response.data.token, response.data.refreshToken, getUser());
                 resolve();
             }).catch(error => { 
-                reject(error);
+                if (error.response && error.response.data && error.response.data.errors 
+                    && error.response.data.errors.length > 0 
+                    && error.response.data.errors[0].indexOf("has been used") > 0) {
+                        resolve();
+                        console.log("duplicated refresh token and recall");
+                } else {
+                    reject(error);
+                }
             });
         } else {
             reject();

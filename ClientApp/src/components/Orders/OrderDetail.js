@@ -1,23 +1,38 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal, Tag } from 'antd';
 
+import './Orders.css';
+import { STATUS_COLORS } from './OrderList';
+import { datetimeString2DateString } from '../../utilities/util';
 import Order from './Order';
+import Summary from './Summary';
 
-const SELECT_CELLARER = "請選擇店家";
+const { confirm } = Modal;
+const REJECT_CONFIRM = "確定拒絕接收此單";
+const OK = "確定";
+const CANCEL = "取消";
 
 class OrderDetail extends Component {
 
     render() {
-        const { items } = this.props;
+        const { row, status, items, accept, reject } = this.props;
 
         return (
-            <Row>
-                <Col span={16}>
-                    <Order items={items} />
-                </Col>
-                <Col span={8}>
-                </Col>
-            </Row>
+            <div>
+                <Row>
+                    <span className="title">{row.merchantName}</span>
+                    <span className="date">{datetimeString2DateString(row.createDateTime)}</span>
+                    <Tag className="status" color={STATUS_COLORS[row.orderStatus]}>{row.orderStatus}</Tag>
+                </Row>
+                <Row>
+                    <Col span={16} className="items">
+                        <Order items={items} />
+                    </Col>
+                    <Col span={8}>
+                        <Summary id={row.id} status={status} items={items} className="summary" accept={accept} reject={reject} />
+                    </Col>
+                </Row>
+            </div>
         );
     }
 }

@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
 
-import './Orders.css';
-
 const COLUMNS = [
     {
         title: "名稱",
         dataIndex: "liquorName",
-        width: "30%"
+        width: "25%"
     },
     {
         title: "容量",
         dataIndex: "liquorCapacity",
-        width: "20%"
+        width: "15%"
     },
     {
         title: "包裝",
@@ -32,15 +30,35 @@ const COLUMNS = [
 ];
 
 class Order extends Component {
+    constructor(props) {
+        super(props);
+        this.columns = Object.assign([], COLUMNS); //不這樣copy的話，COLUMNS也會跟著被改變
+        if (this.props.showSum) {
+            this.columns.push({
+                title: "小計",
+                width: "10%",
+                align: "right",
+                render: (text, record) => <span>${record.quantity * record.price}</span>
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        console.log("componentWillUnmount");
+    }
 
     render() {
-        const { items, onChange } = this.props;
+        const { pagination, showHeader, items } = this.props;
 
-        return (
-            <Table showHeader={false} columns={COLUMNS} className="orderList"
-                    dataSource={items} rowKey="id" pagination={false}/> 
-        );
+        return <Table columns={this.columns} dataSource={items} rowKey="id" 
+            showHeader={showHeader} pagination={pagination}/>;
     }
+}
+
+Order.defaultProps = {
+    pagination: false,
+    showSum: false,
+    showHeader: true
 }
 
 export default Order;

@@ -62,3 +62,21 @@ export const getObjKeysLength = obj => {
 export const compareArray = (a1, a2) => {
     return JSON.stringify(a1) == JSON.stringify(a2);
 }
+
+export const datetimeString2DateString = s => {
+    let result = "";
+    let date = new Date(s);
+
+    if (date) {
+        const yyyy = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const MM =  `${month > 9 ? "" : "0"}${month}`;
+        const day = date.getDate();
+        const dd =  `${day > 9 ? "" : "0"}${day}`;
+
+        result = `${yyyy}-${MM}-${dd}`;
+    }
+    
+
+    return result;
+}

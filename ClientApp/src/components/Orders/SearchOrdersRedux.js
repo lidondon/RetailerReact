@@ -19,8 +19,8 @@ const SEARCH_ORDERS_SAVE_ITEM = "SEARCH_ORDERS_SAVE_ITEM";
 const LOADING = "LOADING";
 const SUCCESS = "SUCCESS";
 const ERROR = "ERROR";
-const INT_2_STRING_PROPS = ["id", "orderStatusId", "liquorId"];
-const STRING_2_INT_PROPS = ["id", "orderStatusId", "quantity"];
+const INT_2_STRING_PROPS = ["id", "orderStatusId", "liquorId", "merchantId"];
+const STRING_2_INT_PROPS = ["id", "orderStatusId", "quantity", "merchantId"];
 
 
 const initialState = {
@@ -32,6 +32,7 @@ const initialState = {
     errorRowSet: new Set(),
     changes: {},
     updateOrderStatus: null,
+    refreshOrders: false
 }
 
 export const clear = () => {
@@ -164,6 +165,7 @@ const processGetCellarers = (state, action) => {
 const processGetOrders = (state, action) => {
     let result = getBaseAxiosResult(state, action);
     
+    result.refreshOrders = false;
     if (action.status === SUCCESS && action.payload) {
         result.orders = intIds2Strings(action.payload, INT_2_STRING_PROPS);
     }
@@ -251,7 +253,7 @@ const processUpdateOrder = (state, action) => {
     let result = getBaseAxiosResult(state, action);
     
     if (action.status === SUCCESS) {
-        result = { ...result, orderItems: [], menuId: null, errorRowSet: new Set(), changes: {} };
+        result = { ...result, orderItems: [], menuId: null, errorRowSet: new Set(), changes: {}, refreshOrders: true };
     }
     result.updateOrderStatus = action.status;
     

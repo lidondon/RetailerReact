@@ -135,9 +135,19 @@ class Menu extends Component {
         this.props.onOk(this.getSelectedItems());
         this.setState({ selectedRowKeys: {} });
     }
+
+    getFilteredItems = () => {
+        const { items } = this.props.menuR;
+        const { selectedCategory } = this.state;
+        const { orderItems } = this.props;
+        
+        return (orderItems && items[selectedCategory])
+            ? items[selectedCategory].filter(i => orderItems.filter(oi => oi.liquorId === i.liquorId).length === 0)
+            : items[selectedCategory];
+    }
     
     render() {
-        const { isLoading, categories, items } = this.props.menuR;
+        const { isLoading, categories } = this.props.menuR;
         const { selectedCategory } = this.state;
         const { id } = this.props;
 
@@ -150,7 +160,7 @@ class Menu extends Component {
                     {CATEGORY}<Dropdown selectedKey={selectedCategory} items={this.getCategoryItems(categories)} onSelect={this.onCategorySelecte} /> 
                 </Row>
                 <Row style={{marginTop: 10}}>
-                    <Table bordered columns={COLUMNS} dataSource={items[selectedCategory]} 
+                    <Table bordered columns={COLUMNS} dataSource={this.getFilteredItems()} 
                         rowKey="id" rowSelection={this.getRowSelection()} /> 
                 </Row>
                 <Row className="row-confirm">

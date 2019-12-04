@@ -1,7 +1,13 @@
 .title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bolder;
     color: black;
+}
+
+.date {
+    font-size: 18px;
+    color: grey;
+    margin-left: 10px;
 }
 
 .box {
@@ -29,4 +35,34 @@
     font-size: 20px;
     color: green;
     margin-top: 5px;
+}
+
+.items {
+    padding-right: 10px;
+}
+
+.summary {
+    padding-left: 10px;
+}
+
+.category {
+    font-size: 24px;
+    font-weight: bold;
+    color: dimgray;
+}
+
+.item-name {
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+.item-amount {
+    margin-top: 5px;
+    font-size: 18px;
+    text-align: right;
+}
+
+.status {
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
