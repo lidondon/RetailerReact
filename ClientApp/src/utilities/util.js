@@ -80,3 +80,11 @@ export const datetimeString2DateString = s => {
 
     return result;
 }
+
+export const isCommonString = s => {
+    return /^[\w!@#$%^&*.]+$/.test(s);
+}
+
+export const isInt = s => {
+    return /^\d+$/.test(s);
+}

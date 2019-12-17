@@ -7,6 +7,7 @@ import EditableTable from '../Shared/EditableTable';
 const REMOVE_TEXT = "移除";
 const SAVE_TEXT = "儲存";
 const SEND_TEXT = "送出";
+const INTEGER = "integer";
 
 const COLUMNS = [
     {
@@ -23,7 +24,8 @@ const COLUMNS = [
         title: "數量",
         dataIndex: "quantity",
         width: "20%",
-        editable: true
+        editable: true,
+        type: INTEGER
     }
 ];
 

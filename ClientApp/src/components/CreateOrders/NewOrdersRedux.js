@@ -8,7 +8,7 @@ const SAVE_ORDER = "SAVE_ORDER";
 const SAVE_ORDER_URL = isSubmit => `/api/v1/retailer/order/create?isSubmit=${isSubmit}`;
 
 const CLEAR_NEW_ORDERS = "CLEAR_NEW_ORDERS";
-const ADD_ITEMS = "ADD_ITEMS";
+const NEWORDER_ADD_ITEMS = "NEWORDER_ADD_ITEMS";
 const BATCH_DELETE = "BATCH_DELETE";
 const SAVE_ITEM = "SAVE_ITEM";
 const LOADING = "LOADING";
@@ -52,7 +52,7 @@ export const getMenuInfo = cellarerId => {
 
 export const addItems = addedItems => {
     return {
-        type: ADD_ITEMS,
+        type: NEWORDER_ADD_ITEMS,
         addedItems
     }
 }
@@ -103,7 +103,7 @@ const reducer = (state = initialState, action) => {
         CLEAR_NEW_ORDERS: processClear,
         GET_CELLARERS: processGetCellarers,
         GET_MENU_INFO: processGetMenuInfo,
-        ADD_ITEMS: processAddItems,
+        NEWORDER_ADD_ITEMS: processAddItems,
         BATCH_DELETE: processBatchDelete,
         SAVE_ITEM: processSaveItem,
         SAVE_ORDER: processSaveOrder
@@ -119,7 +119,8 @@ const processClear = (state, action) => {
         cellarers: [],
         currentCellarer: {},
         orders: {},
-        errorRowSet: {}
+        errorRowSet: {},
+        successCellarerName: null
     };
 }
 

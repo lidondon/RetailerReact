@@ -19,7 +19,7 @@ class SearchOrders extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dateRange: [moment().subtract(1, "months"), moment().add(1, "days")],
+            dateRange: [moment().subtract(7, "days"), moment()],
             currentCellarer: null,
             currentStatus: null,
             filteredOrders: null
@@ -35,10 +35,6 @@ class SearchOrders extends Component {
         const { orders } = nextProps.searchOrdersR;
         let filteredOrders = orders;
         let filterChanged = false;
-
-        if (this.state.dateRange != nextState.dateRange || nextProps.searchOrdersR.refreshOrders) {
-            this.getOrders();
-        }
 
         if ((this.state.currentCellarer !== nextState.currentCellarer)
             || (this.state.currentStatus !== nextState.currentStatus)) {
@@ -56,11 +52,17 @@ class SearchOrders extends Component {
         if (filterChanged || this.props.searchOrdersR.orders !== orders) this.setState({ filteredOrders });
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.dateRange != prevState.dateRange || this.props.searchOrdersR.refreshOrders) {
+            this.getOrders();
+        }
+    }
+
     getOrders = () => {
         const { searchOrdersActions } = this.props;
         const { dateRange } = this.state;
-        const startDate = dateRange[0].format(DATE_STRING_FORMAT);
-        const endDate = dateRange[1].format(DATE_STRING_FORMAT);
+        const startDate = (dateRange[0]) ? dateRange[0].format(DATE_STRING_FORMAT) : "2000-01-01";
+        const endDate = (dateRange[1]) ? dateRange[1].format(DATE_STRING_FORMAT) : "9999-12-31";
 
         searchOrdersActions.getOrders(startDate, endDate);
     }
@@ -81,6 +83,10 @@ class SearchOrders extends Component {
     statusOnChange = e => {
         this.setState({ currentStatus: (e.target.value === UNLIMITED) ? null : e.target.value });
     }
+
+    rangeOnChange = (dates, dateStrings) => {
+        this.setState({ dateRange: [ dates[0], dates[1] ] });
+    }
     
     render() {
         const { searchOrdersR, searchOrdersActions, menuR, menuActions } = this.props;
@@ -90,7 +96,7 @@ class SearchOrders extends Component {
         return (
             <div className="box">
                 {isLoading && <Loading />}
-                <Filter dateRange={dateRange} cellarers={cellarers} 
+                <Filter dateRange={dateRange} cellarers={cellarers} rangeOnChange={this.rangeOnChange}
                     cellarerOnChange={this.cellarerOnChange} statusOnChange={this.statusOnChange} />
                 <Row className="row-orders">
                     <Col span={20}>
@@ -105,13 +111,13 @@ class SearchOrders extends Component {
 }
 
 const Filter = props => {
-    const { cellarers, dateRange, cellarerOnChange, statusOnChange } = props;
+    const { cellarers, dateRange, cellarerOnChange, statusOnChange, rangeOnChange } = props;
     let items = cellarers ? cellarers.map(c => ({value: c.id, text: c.name})) : [];
 
     return (
         <div>
             <Row className="filter">
-                <span>{RANGE}</span><StartEndDate startDate={dateRange[0]} endDate={dateRange[1]} />
+                <span>{RANGE}</span><StartEndDate startDate={dateRange[0]} endDate={dateRange[1]} onChange={rangeOnChange} />
             </Row>
             <Row className="filter">
                 <span>{CELLARER}</span><FewCellarers haveUnlimited={true} onChange={cellarerOnChange} items={items} />

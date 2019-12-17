@@ -15,10 +15,10 @@ class StartEndDate extends Component {
 
     
     render() {
-        const { placeholder, startDate, endDate } = this.props;
+        const { placeholder, startDate, endDate, onChange } = this.props;
 
         return (
-            <RangePicker placeholder={placeholder} defaultValue={[startDate, endDate]} />
+            <RangePicker placeholder={placeholder} defaultValue={[startDate, endDate]} onChange={onChange} />
         );
     }
 }

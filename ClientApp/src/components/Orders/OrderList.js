@@ -32,9 +32,11 @@ const COLUMNS = [
         width: "30%"
     },
     {
-        title: "酒吧",
+        title: "酒商",
         dataIndex: "merchantName",
-        width: "30%"
+        width: "30%",
+        sorter: (a, b) => a.merchantName.localeCompare(b.merchantName),
+        sortDirections: ["ascend", "descend"]
     },
     {
         title: "狀態",
@@ -45,7 +47,9 @@ const COLUMNS = [
     {
         title: "建立時間",
         dataIndex: "createDateTime",
-        width: "25%"
+        width: "25%",
+        sorter: (a, b) => new Date(a.createDateTime) - new Date(b.createDateTime),
+        sortDirections: ["ascend", "descend"]
     }
 ];
 
