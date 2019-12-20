@@ -74,7 +74,7 @@ const processGetMenuItems = (state, action) => {
     let result = getBaseAxiosResult(state, action);
     
     if (action.status === SUCCESS && action.payload) {
-        result.items[action.categoryId] = intIds2Strings(action.payload, INT_2_STRING_PROPS);
+        result.items[action.categoryId] = intIds2Strings(action.payload, INT_2_STRING_PROPS).sort((a, b) => !!a.isConsumerFav ? -1 : 1);
     } 
 
     return result;

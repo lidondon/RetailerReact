@@ -145,6 +145,10 @@ class Menu extends Component {
             ? items[selectedCategory].filter(i => orderItems.filter(oi => oi.liquorId === i.liquorId).length === 0)
             : items[selectedCategory];
     }
+
+    rowClassName = (record, index) => {
+        return record.isConsumerFav ? "favorite" : "";
+    }
     
     render() {
         const { isLoading, categories } = this.props.menuR;
@@ -161,7 +165,7 @@ class Menu extends Component {
                 </Row>
                 <Row style={{marginTop: 10}}>
                     <Table bordered columns={COLUMNS} dataSource={this.getFilteredItems()} 
-                        rowKey="id" rowSelection={this.getRowSelection()} /> 
+                        rowKey="id" rowSelection={this.getRowSelection()} rowClassName={this.rowClassName} /> 
                 </Row>
                 <Row className="row-confirm">
                     <Col span={4} offset={20}>

@@ -8,11 +8,11 @@ class HeartCheckbox extends Component {
     }
 
     render() {
-        const { text, onChange } = this.props;
+        const { text, onChange, isChecked } = this.props;
         
         return (
             <div className="pretty p-icon p-round p-tada p-plain">
-                <input type="checkbox" onChange={this.onChange}/>
+                <input type="checkbox" onChange={this.onChange} checked={isChecked}/>
                 <div className="state p-danger-o">
                     <i className="icon fas fa-heart"></i>
                     <label>{text}</label>

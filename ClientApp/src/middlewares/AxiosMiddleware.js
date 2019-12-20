@@ -110,7 +110,9 @@ const refreshAndRecall = () => {
                 if (error.response && error.response.data && error.response.data.errors 
                     && error.response.data.errors.length > 0 
                     && error.response.data.errors[0].indexOf("has been used") > 0) {
-                        resolve();
+                        setTimeout(() => {
+                            resolve();
+                        }, 200);
                         console.log("duplicated refresh token and recall");
                 } else {
                     reject(error);

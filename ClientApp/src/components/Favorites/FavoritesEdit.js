@@ -41,11 +41,15 @@ class FavoritesEdite extends Component {
     }
 
     componentWillMount() {
-        this.props.favoritesActions.getLiquorCategories();
+        const { getLiquorCategories, getFavorites } = this.props.favoritesActions;
+
+        getLiquorCategories();
+        getFavorites();
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const categories = nextProps.favoritesR.categories;
+        const { categories, refreshCategory } = nextProps.favoritesR;
+        const { getFavorites } = nextProps.favoritesActions;
 
         if (this.state.hasLoadCategories.size == 0 && categories.length > 0) {
             this.props.favoritesActions.getLiquors(categories[0].id);
@@ -53,6 +57,8 @@ class FavoritesEdite extends Component {
                 hasLoadCategories: this.state.hasLoadCategories.add(categories[0].id)
             });
         }
+
+        if (this.props.favoritesR.refreshCategory !== refreshCategory && refreshCategory) getFavorites();
     }
 
     onCategorySelect = key => {
@@ -64,16 +70,26 @@ class FavoritesEdite extends Component {
         }
     }
 
-    getOnCheckedChange = id => {
+    getOnCheckedChange = record => {
+        const { isLoading } = this.props.favoritesR;
+        const { addFavorite, removeFavorite } = this.props.favoritesActions;
+
         return checked => {
-            console.log(checked, id);
+            if (!isLoading) {
+                if (checked) {
+                    addFavorite(record);
+                } else {
+                    removeFavorite(record);
+                }
+            }
         }
     }
 
     getColumns = () => {
         return COLUMNS.map(c => {
             return !c.favoriteCheck ? c : {
-                render: (text, record, index) => <HeartCheckbox key={index} onChange={this.getOnCheckedChange(record.id)} />
+                render: (text, record, index) => <HeartCheckbox key={index} onChange={this.getOnCheckedChange(record)}
+                    isChecked={!!record.favoriteId} />
             };
         });
     }
