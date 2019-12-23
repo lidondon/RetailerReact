@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Table } from 'antd';
 
 import './Menu.css';
-
+import { PACKAGE } from '../../../constants/order';
 import Dropdown from '../../Shared/Dropdown';
 import Loading from '../../Shared/Loading';
 
@@ -24,7 +24,8 @@ const COLUMNS = [
     {
         title: "包裝",
         dataIndex: "liquorBottling",
-        width: "15%"
+        width: "15%",
+        render: text => PACKAGE[text]
     },
     {
         title: "金額",

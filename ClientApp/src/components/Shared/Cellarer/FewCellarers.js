@@ -28,16 +28,19 @@ class FewCellarers extends Component {
         return result;
     }
 
-    onChange = e => {
-        this.setState({ seletedValue: e.target.value });
-        this.props.onChange(e);
-    }
+    // onChange = e => {
+    //     this.setState({ seletedValue: e.target.value });
+    //     this.props.onChange(e);
+    // }
 
     render() {
-        const { seletedValue } = this.state;
+        //let { seletedValue } = this.state;
+        let { value, onChange } = this.props;
+
+        value = value ? value : UNLIMITED;
 
         return (
-            <Group onChange={this.onChange} value={seletedValue}>
+            <Group onChange={onChange} value={value}>
                 {this.getItems()}
             </Group>
         );

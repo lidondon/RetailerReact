@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Modal } from 'antd';
+import { Row, Col } from 'antd';
 import moment from 'moment';
 
 import './Orders.css';
@@ -32,18 +32,35 @@ class SearchOrders extends Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
+        this.processRangeChanged(nextProps, nextState);
+        this.processFilterChanged(nextProps, nextState);
+    }
+
+    processRangeChanged =  (nextProps, nextState) => {
+        const { dateRange } = nextState;
+
+        if (this.state.dateRange !== dateRange) {
+            this.setState({
+                currentCellarer: null,
+                currentStatus: null,
+            });
+        }
+    }
+
+    processFilterChanged = (nextProps, nextState) => {
         const { orders } = nextProps.searchOrdersR;
+        const { currentCellarer, currentStatus } = nextState;
         let filteredOrders = orders;
         let filterChanged = false;
 
-        if ((this.state.currentCellarer !== nextState.currentCellarer)
-            || (this.state.currentStatus !== nextState.currentStatus)) {
+        if ((this.state.currentCellarer !== currentCellarer)
+            || (this.state.currentStatus !== currentStatus)) {
             filterChanged = true;
             filteredOrders = filteredOrders.filter(o => { 
                 let result = false;
 
-                result = nextState.currentCellarer ? o.merchantId === nextState.currentCellarer : true;
-                if (result) result = nextState.currentStatus ? o.orderStatus === nextState.currentStatus : true;
+                result = currentCellarer ? o.merchantId === currentCellarer : true;
+                if (result) result = currentStatus ? o.orderStatus === currentStatus : true;
 
                 return result;
             });
@@ -91,13 +108,14 @@ class SearchOrders extends Component {
     render() {
         const { searchOrdersR, searchOrdersActions, menuR, menuActions } = this.props;
         const { isLoading, cellarers } = searchOrdersR;
-        const { dateRange, filteredOrders } = this.state;
+        const { currentCellarer, currentStatus, dateRange, filteredOrders } = this.state;
 
         return (
             <div className="box">
                 {isLoading && <Loading />}
                 <Filter dateRange={dateRange} cellarers={cellarers} rangeOnChange={this.rangeOnChange}
-                    cellarerOnChange={this.cellarerOnChange} statusOnChange={this.statusOnChange} />
+                    cellarerOnChange={this.cellarerOnChange} statusOnChange={this.statusOnChange}
+                    currentCellarer={currentCellarer} currentStatus={currentStatus} />
                 <Row className="row-orders">
                     <Col span={20}>
                         <OrderList orders={filteredOrders} isChanged={this.isChanged()}
@@ -111,7 +129,7 @@ class SearchOrders extends Component {
 }
 
 const Filter = props => {
-    const { cellarers, dateRange, cellarerOnChange, statusOnChange, rangeOnChange } = props;
+    const { currentCellarer, currentStatus, cellarers, dateRange, cellarerOnChange, statusOnChange, rangeOnChange } = props;
     let items = cellarers ? cellarers.map(c => ({value: c.id, text: c.name})) : [];
 
     return (
@@ -120,10 +138,10 @@ const Filter = props => {
                 <span>{RANGE}</span><StartEndDate startDate={dateRange[0]} endDate={dateRange[1]} onChange={rangeOnChange} />
             </Row>
             <Row className="filter">
-                <span>{CELLARER}</span><FewCellarers haveUnlimited={true} onChange={cellarerOnChange} items={items} />
+                <span>{CELLARER}</span><FewCellarers haveUnlimited={true} onChange={cellarerOnChange} items={items} value={currentCellarer} />
             </Row>
             <Row className="filter">
-                <span>{STATUSES}</span><Statuses onChange={statusOnChange} />
+                <span>{STATUSES}</span><Statuses onChange={statusOnChange} value={currentStatus} />
             </Row>
         </div>
     );

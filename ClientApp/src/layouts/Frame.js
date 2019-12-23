@@ -23,8 +23,12 @@ class Frame extends Component {
     }
 
     getMenu = () => {
-        return isLogin() ? <HaveLogin onLogout={this.onLogoutClick} /> : 
+        return isLogin() ? <HaveLogin onLogout={this.onLogoutClick} isSelected={this.isSelected} /> : 
             <Row><Col offset={22}><Button onClick={this.onLoginClick}>{LOGIN}</Button></Col></Row>;
+    }
+
+    isSelected = path => {
+        return (path === this.props.location.pathname) ? "menu-item-selected" : "";
     }
 
     render () {
@@ -46,19 +50,27 @@ class Frame extends Component {
 }
 
 const HaveLogin = props => {
+    const { isSelected } = props;
+
     return (
         <Row>
             <Col span={16}>
                 <div className="navbar-collapse collapse ">
                     <ul className="navbar-nav flex-grow-1">
                         <li className="nav-item">
-                            <Link className="nav-link text-dark" to="/orders/new">建立訂單</Link>
+                            <Link className="nav-link text-dark" to="/orders/new">
+                                <span className={`menu-item ${isSelected("/orders/new")}`}>建立訂單</span>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-dark" to="/orders">查詢訂單</Link>
+                            <Link className="nav-link text-dark" to="/orders">
+                                <span className={`menu-item ${isSelected("/orders")}`}>查詢訂單</span>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-dark" to="/favorites">偏好品項</Link>
+                            <Link className="nav-link text-dark" to="/favorites">
+                                <span className={`menu-item ${isSelected("/favorites")}`}>偏好品項</span>
+                            </Link>
                         </li>
                     </ul>
                 </div>
