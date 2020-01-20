@@ -187,7 +187,9 @@ const processBatchDelete = (state, action) => {
 }
 
 const deleteFromErrorRowSet = (errorRowSet, selectedRowKeys, cellarerId) => {
-    selectedRowKeys.forEach(id => errorRowSet[cellarerId].delete(id));
+    selectedRowKeys.forEach(id => {
+        if (errorRowSet[cellarerId]) errorRowSet[cellarerId].delete(id);
+    });
 }
 
 const processSaveItem = (state, action) => {

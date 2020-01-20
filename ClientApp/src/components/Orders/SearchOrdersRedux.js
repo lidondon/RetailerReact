@@ -1,4 +1,5 @@
 import { intIds2Strings, stringIds2Ints, pushNewObjectsNoDuplicate, replaceNewObject } from '../../utilities/util';
+import moment from 'moment';
 
 const SEARCH_ORDER_GET_CELLARERS = "SEARCH_ORDER_GET_CELLARERS";
 const GET_CELLARERS_URL = "/api/v1/retailer/coopcellarers";
@@ -56,10 +57,13 @@ export const getCellarers = id => {
 }
 
 export const getOrders = (startDate, endDate) => {
+    const utcStartDate = startDate ? new moment(startDate).utc().format("YYYY-MM-DD") : "2000-01-01";
+    const utcEndDate = endDate ? new moment(endDate).utc().format("YYYY-MM-DD") : "9999-12-31"; 
+
     return {
         type: GET_ORDERS,
         statuses: [ LOADING, SUCCESS, ERROR ],
-        url: GET_ORDERS_URL(startDate, endDate),
+        url: GET_ORDERS_URL(utcStartDate, utcEndDate)
     };
 }
 
